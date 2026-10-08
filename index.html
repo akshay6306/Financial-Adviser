@@ -502,6 +502,10 @@
   <script>
     lucide.createIcons();
 
+    const API_BASE = (window.location.hostname.endsWith('github.io') || window.location.protocol === 'file:')
+      ? 'https://financial-advisor-agent-nu.vercel.app'
+      : '';
+
     let sessionId = localStorage.getItem('arthaveda_session_id') || null;
     let currentCurrency = 'INR';
     let exchangeRate = 83.85;
@@ -509,7 +513,7 @@
 
     async function fetchLiveForexRate() {
       try {
-        let res = await fetch('/api/forex');
+        let res = await fetch(`${API_BASE}/api/forex`);
         let data;
         if (res.ok) {
           data = await res.json();
@@ -684,7 +688,7 @@
       const agentMsgId = appendMessage('agent', 'Thinking & calculating...');
 
       try {
-        const response = await fetch('/api/chat', {
+        const response = await fetch(`${API_BASE}/api/chat`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ message: text, session_id: sessionId })
@@ -780,7 +784,7 @@
 
     async function resetSession() {
       if (sessionId) {
-        await fetch('/api/reset', {
+        await fetch(`${API_BASE}/api/reset`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ session_id: sessionId })
